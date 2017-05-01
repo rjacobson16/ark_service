@@ -14,25 +14,19 @@ class Minter(models.Model):
 	def __repr__(self):
 		return '<Minter: {}'.format(self.name)
 
-	def _ark_exists(self,key):
-		if(Ark.objects.filter(key=key).exists()):
+	def _ark_exists(self, key):
+		return (Ark.objects.filter(key=key).exists())
 		
-			exists = True
-		else:
-			exists = False
-
-		return exists
 
 	def mint(self, quantity):
+		
 		i = 0
 		while i < quantity:
 			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template=self.template)
-		
 			if self._ark_exists(key):
 				continue
-			
 			else:
-				Ark.objects.create(key)
+				Ark.objects.create(key=key, minter = self)
 				i+=1
 				
 			 
@@ -44,7 +38,7 @@ class Ark(models.Model):
 	url = models.URLField(null=True, blank=True)
 
 	def __repr__(self):
-		return '<Ark: {}'.format(self.key)
+		return '<Ark: {}>'.format(self.key)
 
 	def bind(self, url):
 		self.url = url
