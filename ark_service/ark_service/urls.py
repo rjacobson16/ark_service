@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from arkapp import views as arkapp_views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^minters/$', arkapp_views.minters_list, name='minters_list'),
+    url(r'^arks/$', arkapp_views.arks_list, name='arks_list')
 ]

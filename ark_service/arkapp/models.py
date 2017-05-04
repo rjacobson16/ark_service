@@ -14,12 +14,15 @@ class Minter(models.Model):
 	def __repr__(self):
 		return '<Minter: {}'.format(self.name)
 
+	def __str__(self):
+		return self.name
+
 	def _ark_exists(self, key):
 		return (Ark.objects.filter(key=key).exists())
-		
+
 
 	def mint(self, quantity):
-		
+
 		i = 0
 		while i < quantity:
 			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template=self.template)
@@ -28,8 +31,8 @@ class Minter(models.Model):
 			else:
 				Ark.objects.create(key=key, minter = self)
 				i+=1
-				
-			 
+
+
 class Ark(models.Model):
 	key = models.CharField(max_length=25, unique=True)
 	date_created = models.DateTimeField(auto_now_add=True)
@@ -39,6 +42,9 @@ class Ark(models.Model):
 
 	def __repr__(self):
 		return '<Ark: {}>'.format(self.key)
+
+	def __str__(self):
+		return 'ARK# ' + self.key	
 
 	def bind(self, url):
 		self.url = url
