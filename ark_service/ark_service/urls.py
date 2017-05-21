@@ -17,9 +17,14 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from arkapp import views as arkapp_views
+from arkapp.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^minters/$', arkapp_views.minters_list, name='minters_list'),
-    url(r'^arks/$', arkapp_views.arks_list, name='arks_list')
+    url(r'^arks/$', arkapp_views.arks_list, name='arks_list'),
+    url(r'^mint/(?P<minter_id>\d+)/(?P<qty>\d+)', arkapp_views.mint),
+    url(r'^bind/(?P<key>\w+)/(?P<url>.+)', arkapp_views.bind),
+    url(r'(P?<key>\w+)', arkapp_views.resolve)
+
 ]

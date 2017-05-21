@@ -21,16 +21,21 @@ class Minter(models.Model):
 		return (Ark.objects.filter(key=key).exists())
 
 
-	def mint(self, quantity):
-
+	def mint(self, qty):
+		arks = []
 		i = 0
-		while i < quantity:
+		while i < qty:
 			key = arkpy.mint(authority=settings.NAAN, prefix=self.prefix, template=self.template)
 			if self._ark_exists(key):
 				continue
 			else:
-				Ark.objects.create(key=key, minter = self)
+				ark = Ark.objects.create(key=key, minter=self)
+				arks.append(ark)
 				i+=1
+		if qty == 1:
+			return arks[0]
+		else:
+			return arks
 
 
 class Ark(models.Model):
@@ -44,7 +49,7 @@ class Ark(models.Model):
 		return '<Ark: {}>'.format(self.key)
 
 	def __str__(self):
-		return 'ARK# ' + self.key	
+		return 'ARK# ' + self.key
 
 	def bind(self, url):
 		self.url = url
